@@ -1,28 +1,41 @@
-<template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template lang="html">
+  <div>
+    <h1>Find your perfect makeup...</h1>
+    <product-list :products="products" />
+    <product-detail :product="selectedProduct" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { eventBus } from "./main.js";
+import ProductList from "./components/ProductList.vue"
+import ProductDetail from "./components/ProductDetail.vue"
 
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
+
+data() {
+  return {
+    products: [],
+    selectedProduct: null
   }
+},
+
+components: {
+  "product-list": ProductList,
+  "product-detail": ProductDetail
+},
+
+  mounted() {
+    fetch('http://makeup-api.herokuapp.com/api/v1/products.json')
+    .then(result => result.json())
+    .then(products => this.products = products)
+    eventBus.$on("product-selected", (product) => {
+      this.selectedProduct = product;
+    })
+  }
+
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="css" scoped>
 </style>
