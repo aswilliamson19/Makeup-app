@@ -1,10 +1,10 @@
 <template lang="html">
   <div id="favourites">
     <h3>Your Favourite Products...</h3>
-    <ul v-for="product in favouriteProducts">
+    <ul v-for="product in favouriteProducts" :product="product" :key="product.id">
       <li :value="product">{{ product.name }}</li>
       <button v-on:click="displayInfo">More info?</button>
-      <button v-on:click="removeFromFavourites">Remove From Favourites</button>
+      <button :product="selectedProduct" v-on:click="removeFromFavourites">Remove From Favourites</button>
     </ul>
   </div>
 </template>
@@ -17,14 +17,15 @@ export default {
   data() {
     return {
       "favouriteProduct": {},
-      "selectedProduct": {}
+      "selectedProduct": null
     }
   },
   props: ["favouriteProducts", "product"],
   methods: {
     removeFromFavourites: function(product) {
-      this.favouriteProducts.splice(selectedProduct)
-      eventBus.$emit("favouriteProducts", this.selectedProduct)
+      const index = this.favouriteProducts.indexOf(product);
+      this.favouriteProducts.splice(index, 1)
+      eventBus.$emit("favouriteProducts", this.product)
     },
     displayInfo: function() {
       eventBus.$emit("product-selected", this.selectedProduct)
